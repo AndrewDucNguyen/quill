@@ -1,6 +1,8 @@
 import React from 'react'
 import Link from 'next/link'
 import MaxWidthWrapper from './MaxWidthWrapper'
+import { buttonVariants } from './ui/button'
+import {LoginLink} from "@kinde-oss/kinde-auth-nextjs/server"
 
 const Navbar = () => {
   return (
@@ -12,6 +14,18 @@ const Navbar = () => {
                 </Link>
 
                 {/* Todo: add mobile navbar */}
+                <div className='hidden items-center space-x-4 sm:flex'>
+                    <>
+                        <Link className={buttonVariants({
+                            variant: "ghost",
+                            size: 'sm'
+                        })} href='/pricing'>Pricing</Link>
+                        <LoginLink className={buttonVariants({
+                            variant: "ghost",
+                            size: 'sm'
+                        })}>Sign in</LoginLink>
+                    </>
+                </div>
             </div>
         </MaxWidthWrapper>
     </nav>
