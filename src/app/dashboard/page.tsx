@@ -1,8 +1,11 @@
+import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
 import React from 'react'
 
 const dashboard = () => {
+  const {getUser} = getKindeServerSession();
+  const user = getUser();
   return (
-    <div>dashboard</div>
+    <div>{user.email}</div>
   )
 }
 
