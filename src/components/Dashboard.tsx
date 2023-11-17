@@ -1,15 +1,34 @@
 "use client"
 
-import React from 'react'
+import React, { useState } from 'react'
 import { trpc } from '@/app/_trpc/client'
 import UploadButton from './UploadButton'
-import { Ghost, MessageSquare, Plus } from 'lucide-react';
+import { Ghost, Loader2, MessageSquare, Plus, Trash } from 'lucide-react';
 import Skeleton from 'react-loading-skeleton';
 import Link from 'next/link';
 import { format } from 'date-fns';
+import { Button } from './ui/button';
 
 const Dashboard = () => {
+  const [currentlyDeleteingFile, setCurrentlyDeleteingFile] = useState<string | null>(
+    null
+  )
+
+  const utils = trpc.useContext()
+
   const {data: files, isLoading} = trpc.getUserFiles.useQuery();
+
+  const { mutate: deleteFile } = trpc.deleteFile.useMutation({
+    onSuccess: () => {
+      utils.getUserFiles.invalidate()
+    },
+    onMutate({id}) {
+      setCurrentlyDeleteingFile(id)
+    },
+    onSettled() {
+      setCurrentlyDeleteingFile(null)
+    }
+  })
 
   return (
     <main className='mx-auto max-w-7xl md:p-10'>
@@ -18,7 +37,6 @@ const Dashboard = () => {
         <UploadButton />
       </div>
 
-      {/* Display all user files */}
       {files && files?.length !== 0 ? (
         <ul className='mt-8 grid grid-cols-1 gap-6 divide-y divide-zinc-200 md:grid-cols-2 lg:grid-cols-3'>
           {files.sort((a, b) => new Date(b.createdAt).getTime() -  new Date(a.createdAt).getTime()).map((file) => (
@@ -39,11 +57,18 @@ const Dashboard = () => {
                   <Plus className='h-4 w-4'/>
                   {format(new Date(file.createdAt), "MMM yyy")}
                 </div>
-              </div>
+                <div>
+                  <MessageSquare className='h-4 w-4'/>
+                  mocked
+                </div>
 
-              <div>
-                <MessageSquare className='h-4 w-4'/>
-                mocked
+                <Button size='sm' className='w-full' variant='destructive' onClick={() => deleteFile({id: file.id})}>
+                  {currentlyDeleteingFile === file.id ? (
+                    <Loader2 className='h-4 w-4 animate-spin'/>
+                  ) : (
+                    <Trash className='h-4 w-4'/> 
+                  )}
+                </Button>
               </div>
             </li>
           ))}
