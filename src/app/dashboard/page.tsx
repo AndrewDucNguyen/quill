@@ -5,10 +5,10 @@ import { redirect } from 'next/navigation';
 import React from 'react'
 
 const dashboard = async () => {
-  const {getUser} = getKindeServerSession();
+  const { getUser } = getKindeServerSession();
   const user = getUser();
 
-  if(!user || !user.id) {
+  if (!user || !user.id) {
     redirect('/auth-callback?origin=dashboard')
   }
 

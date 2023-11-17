@@ -9,13 +9,13 @@ interface PageProps {
     }
 }
 
-const page = async ({params}: PageProps) => {
-     const {fileid} = params;
+const page = async ({ params }: PageProps) => {
+    const { fileid } = params;
 
-     const {getUser} = getKindeServerSession();
-     const user = getUser();
+    const { getUser } = getKindeServerSession();
+    const user = getUser();
 
-     if(!user || !user.id) redirect(`/auth-callback?origin=dashboard/${fileid}`)
+    if (!user || !user.id) redirect(`/auth-callback?origin=dashboard/${fileid}`)
 
     const file = await db.file.findFirst({
         where: {
@@ -24,13 +24,13 @@ const page = async ({params}: PageProps) => {
         }
     })
 
-    if(!file) notFound();
+    if (!file) notFound();
 
     return (
-    <div>
-        {fileid}
-    </div>
-  )
+        <div>
+            {fileid}
+        </div>
+    )
 }
 
 export default page
