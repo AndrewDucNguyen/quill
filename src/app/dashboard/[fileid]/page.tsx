@@ -10,16 +10,13 @@ interface PageProps {
 }
 
 const page = async ({params}: PageProps) => {
-    // retrieve file id
      const {fileid} = params;
 
-    // Check if user is logged in
      const {getUser} = getKindeServerSession();
      const user = getUser();
 
      if(!user || !user.id) redirect(`/auth-callback?origin=dashboard/${fileid}`)
 
-    // make database call
     const file = await db.file.findFirst({
         where: {
             id: fileid,
@@ -28,6 +25,7 @@ const page = async ({params}: PageProps) => {
     })
 
     if(!file) notFound();
+
     return (
     <div>
         {fileid}
