@@ -32,7 +32,7 @@ model File {
 
 enum UploadStatus {
   PENDING
-  RPOCESSING
+  PROCESSING
   FAILED
   SUCCESS
 }
