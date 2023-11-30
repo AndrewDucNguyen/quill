@@ -2,6 +2,9 @@ import { db } from "@/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { PDFLoader } from "langchain/document_loaders/fs/pdf"
+import { getPineconeClient, pinecone } from "@/lib/pinecone";
+import { OpenAIEmbeddings } from "langchain/embeddings/openai"
+import { PineconeStore } from "langchain/vectorstores/pinecone"
 
 const f = createUploadthing();
 
@@ -30,11 +33,45 @@ export const ourFileRouter = {
             })
             try {
                 const response = await fetch(`https://uploadthing-prod.s3.us-west-2.amazonaws.com/${file.key}`)
+
                 const blob = await response.blob()
 
                 const loader = new PDFLoader(blob)
-            } catch (err) {
 
+                const pageLevelDocs = await loader.load()
+
+                const pagesAmt = pageLevelDocs.length
+
+                const pinecone = await getPineconeClient()
+                const pineconeIndex = pinecone.Index("quill")
+
+                const embeddings = new OpenAIEmbeddings({
+                    openAIApiKey: process.env.OPENAI_API_KEY
+                })
+
+                await PineconeStore.fromDocuments(pageLevelDocs, embeddings, {
+                    //@ts-ignore
+                    pineconeIndex,
+                    namespace: createdFile.id
+                })
+
+                await db.file.update({
+                    data: {
+                        uploadStatus: "SUCCESS"
+                    },
+                    where: {
+                        id: createdFile.id
+                    }
+                })
+            } catch (err) {
+                await db.file.update({
+                    data: {
+                        uploadStatus: "FAILED"
+                    },
+                    where: {
+                        id: createdFile.id
+                    }
+                })
             }
         }),
 } satisfies FileRouter;
