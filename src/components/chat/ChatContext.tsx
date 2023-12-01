@@ -9,7 +9,7 @@ type StreamResponse = {
     isLoading: boolean
 }
 
-export const ChatContent = createContext<StreamResponse>({
+export const ChatContext = createContext<StreamResponse>({
     addMessage: () => { },
     message: '',
     handleInputChange: () => { },
@@ -21,7 +21,7 @@ interface Props {
     children: ReactNode
 }
 
-export const ChatContentProvider = ({ fileId, children }: Props) => {
+export const ChatContextProvider = ({ fileId, children }: Props) => {
     const [message, setMessage] = useState<string>('')
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
@@ -44,20 +44,21 @@ export const ChatContentProvider = ({ fileId, children }: Props) => {
         }
     })
 
-    const addMessage = () => sendMessage({ message })
-
     const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setMessage(e.target.value)
     }
 
+    const addMessage = () => sendMessage({ message })
+
     return (
-        <ChatContent.Provider value={{
-            addMessage,
-            message,
-            handleInputChange,
-            isLoading
-        }}>
+        <ChatContext.Provider
+            value={{
+                addMessage,
+                message,
+                handleInputChange,
+                isLoading
+            }}>
             {children}
-        </ChatContent.Provider>
+        </ChatContext.Provider>
     )
 }

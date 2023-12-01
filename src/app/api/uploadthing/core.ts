@@ -2,9 +2,9 @@ import { db } from "@/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { PDFLoader } from "langchain/document_loaders/fs/pdf"
-import { getPineconeClient, pinecone } from "@/lib/pinecone";
-import { OpenAIEmbeddings } from "langchain/embeddings/openai"
 import { PineconeStore } from "langchain/vectorstores/pinecone"
+import { getPineconeClient } from "@/lib/pinecone";
+import { OpenAIEmbeddings } from "langchain/embeddings/openai"
 
 const f = createUploadthing();
 
@@ -57,7 +57,7 @@ export const ourFileRouter = {
 
                 await db.file.update({
                     data: {
-                        uploadStatus: "SUCCESS"
+                        uploadStatus: 'SUCCESS'
                     },
                     where: {
                         id: createdFile.id
@@ -66,7 +66,7 @@ export const ourFileRouter = {
             } catch (err) {
                 await db.file.update({
                     data: {
-                        uploadStatus: "FAILED"
+                        uploadStatus: 'FAILED'
                     },
                     where: {
                         id: createdFile.id
