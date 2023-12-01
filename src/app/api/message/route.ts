@@ -47,7 +47,6 @@ export const POST = async (req: NextRequest) => {
     const pineconeIndex = pinecone.Index("quill")
 
     const vectorStore = await PineconeStore.fromExistingIndex(embeddings, {
-        //@ts-ignore
         pineconeIndex,
         namespace: file.id
     })
@@ -65,7 +64,7 @@ export const POST = async (req: NextRequest) => {
     })
 
     const formattedPrevMessages = prevMessages.map((msg) => ({
-        role: msg.isUserMessage ? "user" as const : "assistant" as const,
+        role: msg.isUserMessage ? ("user" as const) : ("assistant" as const),
         content: msg.text
     }))
 
