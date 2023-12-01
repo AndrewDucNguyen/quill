@@ -1,8 +1,16 @@
+import { cn } from '@/lib/utils'
 import React from 'react'
 
-const Message = () => {
+interface MessageProps {
+    message: ,
+    isNextMessageSamePerson: boolean
+}
+
+const Message = ({ message, isNextMessageSamePerson }: MessageProps) => {
     return (
-        <div>Message</div>
+        <div className={cn('flex items-end')}>
+
+        </div>
     )
 }
 
