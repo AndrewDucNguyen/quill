@@ -50,7 +50,6 @@ export const ourFileRouter = {
                 })
 
                 await PineconeStore.fromDocuments(pageLevelDocs, embeddings, {
-                    //@ts-ignore
                     pineconeIndex,
                     namespace: createdFile.id
                 })
