@@ -3,7 +3,7 @@ import { privateProcedure, publicProcedure, router } from './trpc';
 import { TRPCError } from '@trpc/server';
 import { db } from '@/db';
 import { z } from 'zod';
-import { INIFINITE_QUERY_LIMIT } from '@/config/inifinte-query';
+import { INFINITE_QUERY_LIMIT } from '@/config/infinte-query';
 
 export const appRouter = router({
     authCallback: publicProcedure.query(async () => {
@@ -49,7 +49,7 @@ export const appRouter = router({
     ).query(async ({ ctx, input }) => {
         const { userId } = ctx
         const { fileId, cursor } = input
-        const limit = input.limit ?? INIFINITE_QUERY_LIMIT
+        const limit = input.limit ?? INFINITE_QUERY_LIMIT
 
         const file = await db.file.findFirst({
             where: {
