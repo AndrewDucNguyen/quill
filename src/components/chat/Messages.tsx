@@ -61,7 +61,7 @@ const Messages = ({ fileId }: MessagesProps) => {
           const isNextMessageSamePerson = combinedMessages[i - 1]?.isUserMessage === combinedMessages[i]?.isUserMessage
 
           if (i === combinedMessages.length - 1) {
-            return <Message ref={lastMessageRef} message={message} isNextMessageSamePerson={isNextMessageSamePerson} key={message.id} />
+            return <Message ref={ref} message={message} isNextMessageSamePerson={isNextMessageSamePerson} key={message.id} />
           } else return (
             <Message message={message} isNextMessageSamePerson={isNextMessageSamePerson} key={message.id} />
           )
